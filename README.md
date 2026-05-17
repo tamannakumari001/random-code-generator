@@ -6,57 +6,61 @@ A small project that touches on automata theory, formal languages, and compiler 
 
 ### 1. DFA & Regular Languages (start here)
 
-If you've never seen finite automata before, start with these:
+Stanford CS103 — *Mathematical Foundations of Computing* (Reingold-style intro):
 
-- **Stanford CS103 — Mathematical Foundations of Computing**
-  Course page: <https://web.stanford.edu/class/cs103/>
-  Look under the "Lectures" / "Handouts" sections for the DFA, NFA, and regular-language slides — they're some of the clearest introductions you'll find.
-- **Hopcroft, Motwani & Ullman — *Introduction to Automata Theory, Languages, and Computation*** (the classic textbook).
-  Author page with errata: <https://infolab.stanford.edu/~ullman/ialc.html>
-- **Wikipedia primers** (good for definitions and examples):
-  - DFA: <https://en.wikipedia.org/wiki/Deterministic_finite_automaton>
-  - NFA: <https://en.wikipedia.org/wiki/Nondeterministic_finite_automaton>
-  - Regular language: <https://en.wikipedia.org/wiki/Regular_language>
-- **Neso Academy — Theory of Computation playlist** on YouTube (search "Neso Academy Theory of Computation"). Friendly, paced lectures for self-study.
+- [Finite Automata, Part I](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/14/Lecture%20Slides.pdf)
+- [Finite Automata, Part II](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/15/Lecture%20Slides.pdf)
+- [Finite Automata, Part III](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/16/Lecture%20Slides.pdf)
+- [Regular Expressions](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/17/Lecture%20Slides.pdf)
+- [Nonregular Languages (Pumping Lemma)](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/18/Lecture%20Slides.pdf)
+
+Bonus — Omer Reingold's CS154 slide decks (cleaner standalone DFA/NFA proofs):
+
+- [DFA overview](https://omereingold.wordpress.com/wp-content/uploads/2020/09/5p-dfa-overview.pdf)
+- [DFAs](https://omereingold.wordpress.com/wp-content/uploads/2020/09/6p-dfas.pdf)
+- [Closure properties of regular languages](https://omereingold.wordpress.com/wp-content/uploads/2020/09/7p-dfaclosure1.pdf)
+- [NFAs](https://omereingold.wordpress.com/wp-content/uploads/2020/09/8p-nfas.pdf)
+- [NFA → DFA](https://omereingold.wordpress.com/wp-content/uploads/2020/09/9p-nfa2dfa.pdf)
+- [Regular expressions](https://omereingold.wordpress.com/wp-content/uploads/2020/09/11p-regexp.pdf)
+- [Pumping lemma](https://omereingold.wordpress.com/wp-content/uploads/2020/09/12p-pumping.pdf)
+- [Minimizing DFAs](https://omereingold.wordpress.com/wp-content/uploads/2020/09/13p-minimizingdfa.pdf)
+- [Myhill–Nerode](https://omereingold.wordpress.com/wp-content/uploads/2020/09/14p-myhill-nerode.pdf)
 
 Once you can build a DFA for "strings containing `01`" and convert an NFA to a DFA on paper, move on.
 
 ### 2. Context-Free Grammars (CFGs)
 
-CFGs describe what regular expressions cannot — nested/balanced structure like parentheses, expression trees, JSON, etc.
-
-- **Stanford CS143 — Compilers**, "Context-Free Grammars" and "Parsing" lectures:
-  Course page: <https://web.stanford.edu/class/cs143/>
-  The slide decks under "Lectures" cover CFGs, ambiguity, and derivations cleanly.
-- **Stanford CS154 — Introduction to Automata and Complexity Theory**:
-  <https://cs154.stanford.edu/>
-- Wikipedia: <https://en.wikipedia.org/wiki/Context-free_grammar>
+- [Stanford CS103 — Context-Free Languages](https://web.stanford.edu/class/archive/cs/cs103/cs103.1266/lectures/19/Lecture%20Slides.pdf) — high-level intro.
+- [UIUC CS373 — Context-Free Languages and Ambiguity (lec12)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec12.pdf)
+- [UIUC CS373 — Grammar Simplification (lec14)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec14.pdf)
+- [UIUC CS373 — Normal Forms & Closure (lec15)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec15.pdf)
+- [Stanford CS143 — Introduction to Parsing (lecture05)](https://web.stanford.edu/class/cs143/lectures/lecture05.pdf) — CFGs from a compiler's perspective.
 
 Practice: write a CFG for balanced parentheses, then for simple arithmetic with `+` and `*` respecting precedence.
 
 ### 3. Pushdown Automata (PDA)
 
-A PDA = finite automaton + a stack. This is what gives it the power to recognize CFLs.
+Stanford's CS103 and the current CS154 don't publish PDA slides — they skip from CFGs to Turing machines. UIUC CS373 has the cleanest direct slide deck on PDAs I've found:
 
-- **Stanford CS154 PDA lecture slides** (linked from the course page above).
-- Wikipedia: <https://en.wikipedia.org/wiki/Pushdown_automaton>
-- Hopcroft/Motwani/Ullman, Chapter 6 — the canonical treatment.
+- [UIUC CS373 — Pushdown Automata (lec13)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec13.pdf)
+- [UIUC CS373 — Pumping Lemma and non-CFLs (lec17)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec17.pdf)
 
 ### 4. Nondeterministic PDAs (NPDA)
 
-NPDAs are strictly more powerful than deterministic PDAs — they recognize *all* context-free languages, while DPDAs only recognize a strict subset (the deterministic CFLs).
+The PDA slide deck above already presents the model nondeterministically — NPDAs are the *default* PDA model, and they are strictly more powerful than DPDAs (NPDAs recognize all CFLs; DPDAs only recognize the deterministic CFLs).
 
-- **Stanford CS154 slides on PDAs and CFLs** — the same deck typically introduces nondeterminism alongside PDAs:
-  <https://cs154.stanford.edu/>
-- Wikipedia comparison: <https://en.wikipedia.org/wiki/Deterministic_pushdown_automaton>
-- Hopcroft/Motwani/Ullman, Section 6.4 (equivalence of PDAs and CFGs).
+- [UIUC CS373 — Pushdown Automata (lec13)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec13.pdf) — see the nondeterministic transition definition and CFG↔PDA equivalence.
+- [UIUC CS373 — Chomsky Hierarchy (lec18)](https://courses.engr.illinois.edu/cs373/sp2013/Lectures/lec18.pdf) — situates NPDAs against DFAs and TMs.
+
+Reference for DPDA vs NPDA separation: <https://en.wikipedia.org/wiki/Deterministic_pushdown_automaton>.
 
 ### 5. Symbol Tables
 
 Once you're past recognition and into actually compiling/interpreting code, you need a symbol table to track identifiers, scopes, and types.
 
-- **Stanford CS143 — "Semantic Analysis" lecture** (symbol tables, scoping):
-  <https://web.stanford.edu/class/cs143/>
-- **Aho, Lam, Sethi & Ullman — *Compilers: Principles, Techniques, and Tools*** (the "Dragon Book"), Chapter 2 and Chapter 7 cover symbol tables and scope management.
-- Wikipedia: <https://en.wikipedia.org/wiki/Symbol_table>
-- GeeksforGeeks has a concise overview — search "GeeksforGeeks symbol table compiler design".
+- [Stanford CS143 — Lexical Analysis (lecture03)](https://web.stanford.edu/class/cs143/lectures/lecture03.pdf)
+- [Stanford CS143 — Implementation of Lexical Analysis (lecture04)](https://web.stanford.edu/class/cs143/lectures/lecture04.pdf)
+- [Stanford CS143 — Top-Down Parsing (lecture07)](https://web.stanford.edu/class/cs143/lectures/lecture07.pdf)
+- [Stanford CS143 — Bottom-Up Parsing (lecture08)](https://web.stanford.edu/class/cs143/lectures/lecture08.pdf)
+- [Stanford CS143 — Semantic Analysis & Type Checking I (lecture09)](https://web.stanford.edu/class/cs143/lectures/lecture09.pdf) — symbol tables and scopes are introduced here.
+- [Stanford CS143 — Type Checking II (lecture10)](https://web.stanford.edu/class/cs143/lectures/lecture10.pdf)
