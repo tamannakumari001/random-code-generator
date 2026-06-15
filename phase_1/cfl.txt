@@ -1,0 +1,7 @@
+Expr -> Int
+Expr -> Var
+Expr -> Expr Op Expr
+Op   -> + | - | *
+
+Stmt -> name = Expr
+Stmt -> print(Expr)
