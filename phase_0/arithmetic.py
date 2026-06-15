@@ -10,7 +10,7 @@ def random_positive_integer(rng: random.Random, max_bits: int = 64) -> int:
     return value%100 or 1
 
 
-def generate_arithmetic(depth: int, rng: random.Random, type: str) -> str:
+def generate_expression(depth: int, rng: random.Random, type: str) -> str:
     # generate an arithmetic expression of this depth
     if depth <= 0:
         return "1"
@@ -19,12 +19,12 @@ def generate_arithmetic(depth: int, rng: random.Random, type: str) -> str:
         if c == 1:
             return str(random_positive_integer(rng))
         elif c == 2:
-            left = generate_arithmetic(depth -1,rng, "Exp")
-            right = generate_arithmetic(depth -1,rng, "Exp")
-            op = generate_arithmetic(1,rng,"op")
+            left = generate_expression(depth -1,rng, "Exp")
+            right = generate_expression(depth -1,rng, "Exp")
+            op = generate_expression(1,rng,"op")
             return left + op + right
         else:
-            inside = generate_arithmetic(depth-1,rng,"Exp")
+            inside = generate_expression(depth-1,rng,"Exp")
             return f'({inside})'
     if type == "op":
         c = rng.choice([1,2,3,0])
@@ -50,7 +50,7 @@ def main() -> None:
     rng = random.Random(args.seed)
 
     for index in range(args.count):
-        expression = generate_arithmetic(args.depth, rng, "Exp")
+        expression = generate_expression(args.depth, rng, "Exp")
 
         try:
             compile(expression, "<generated arithmetic>", "eval")
