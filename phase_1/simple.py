@@ -44,6 +44,6 @@ def stmt_handler(rng) -> str:
         name = rng.choice(vars)
         return f"print({name})"
 rng = random.Random(10)  
-for i in range(10):
+for i in range(100):
     
     print(stmt_handler(rng))
