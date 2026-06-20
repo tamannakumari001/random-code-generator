@@ -1,0 +1,83 @@
+
+
+start symbol
+Program   -> StmtList EOF
+
+StmtList  -> Stmt
+StmtList  -> Stmt NEWLINE StmtList
+
+Block   -> NEWLINE INDENT StmtList DEDENT
+
+
+Stmt    -> AssignStmt
+Stmt    -> PrintStmt
+Stmt    -> IfStmt
+Stmt    -> WhileStmt
+
+AssignStmt-> Name = Expr
+AssignStmt-> Name = BoolExpr
+
+PrintStmt -> print ( Expr )
+
+IfStmt -> if BoolExpr : Block else : Block
+
+WhileStmt -> while BoolExpr : Block
+
+
+Expr   -> Int
+Expr   -> Name
+Expr   -> ( Expr )
+Expr   -> Expr ArithOp Expr
+
+
+ArithOp   -> +
+ArithOp   -> -
+ArithOp   -> *
+
+
+
+BoolExpr  -> BoolLiteral
+BoolExpr  -> Name
+BoolExpr  -> Comparison
+BoolExpr  -> ( BoolExpr )
+BoolExpr  -> not BoolExpr
+BoolExpr  -> BoolExpr BoolOp BoolExpr
+
+BoolLiteral -> True
+BoolLiteral -> False
+
+Comparison  -> Expr CompareOp Expr
+
+
+
+CompareOp   -> <
+CompareOp   -> >
+CompareOp   -> ==
+CompareOp   -> !=
+CompareOp   -> <=
+CompareOp   -> >=
+
+BoolOp      -> and
+BoolOp      -> or
+
+Name      -> identifier
+Int       -> integer_literal
+
+Keywords:
+  if else while print True False not and or
+
+Punctuation:
+  = ( ) : + - * < > == != <= >=
+
+Layout Tokens:
+  NEWLINE INDENT DEDENT EOF
+
+  Expr       -> AddExpr
+  AddExpr    -> MulExpr
+  AddExpr    -> AddExpr + MulExpr
+  AddExpr    -> AddExpr - MulExpr
+  MulExpr    -> Atom
+  MulExpr    -> MulExpr * Atom
+  Atom       -> Int
+  Atom       -> Name
+  Atom       -> ( Expr )
