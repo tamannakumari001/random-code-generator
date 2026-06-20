@@ -1,0 +1,185 @@
+Program -> TopStmtList EOF
+
+TopStmtList -> TopStmt
+TopStmtList -> TopStmt NEWLINE TopStmtList
+
+TopStmt -> Stmt
+TopStmt -> FunctionDef
+
+Block -> NEWLINE INDENT StmtList DEDENT
+
+StmtList -> Stmt
+StmtList -> Stmt NEWLINE StmtList
+
+Stmt -> AssignStmt
+Stmt -> PrintStmt
+Stmt -> IfStmt
+Stmt -> WhileStmt
+Stmt -> ReturnStmt
+Stmt -> ExprStmt
+
+AssignStmt -> Name = IntExpr
+AssignStmt -> Name = BoolExpr
+AssignStmt -> Name = StringExpr
+AssignStmt -> Name = IntListExpr
+AssignStmt -> Name = BoolListExpr
+AssignStmt -> Name = StringListExpr
+
+PrintStmt -> print ( IntExpr )
+PrintStmt -> print ( BoolExpr )
+PrintStmt -> print ( StringExpr )
+
+IfStmt -> if BoolExpr : Block else : Block
+
+WhileStmt -> while BoolExpr : Block
+
+ReturnStmt -> return IntExpr
+ReturnStmt -> return BoolExpr
+ReturnStmt -> return StringExpr
+ReturnStmt -> return IntListExpr
+ReturnStmt -> return BoolListExpr
+ReturnStmt -> return StringListExpr
+
+ExprStmt -> FunctionCall
+
+FunctionDef -> def Name ( ParamListOpt ) : FunctionBlock
+
+FunctionBlock -> NEWLINE INDENT FunctionStmtList DEDENT
+
+FunctionStmtList -> FunctionStmt
+FunctionStmtList -> FunctionStmt NEWLINE FunctionStmtList
+
+FunctionStmt -> Stmt
+FunctionStmt -> ReturnStmt
+
+ParamListOpt -> empty
+ParamListOpt -> ParamList
+
+ParamList -> Param
+ParamList -> Param , ParamList
+
+Param -> Name : Type
+
+FunctionCall -> Name ( ArgListOpt )
+
+ArgListOpt -> empty
+ArgListOpt -> ArgList
+
+ArgList -> ValueExpr
+ArgList -> ValueExpr , ArgList
+
+Type -> int
+Type -> bool
+Type -> str
+Type -> list [ int ]
+Type -> list [ bool ]
+Type -> list [ str ]
+
+ValueExpr -> IntExpr
+ValueExpr -> BoolExpr
+ValueExpr -> StringExpr
+ValueExpr -> IntListExpr
+ValueExpr -> BoolListExpr
+ValueExpr -> StringListExpr
+ValueExpr -> FunctionCall
+
+IntExpr -> Int
+IntExpr -> IntName
+IntExpr -> ( IntExpr )
+IntExpr -> IntExpr ArithOp IntExpr
+IntExpr -> len ( ListExpr )
+IntExpr -> IntListExpr [ IntExpr ]
+IntExpr -> IntFunctionCall
+
+ArithOp -> +
+ArithOp -> -
+ArithOp -> *
+
+BoolExpr -> BoolLiteral
+BoolExpr -> BoolName
+BoolExpr -> Comparison
+BoolExpr -> StringComparison
+BoolExpr -> ( BoolExpr )
+BoolExpr -> not BoolExpr
+BoolExpr -> BoolExpr BoolOp BoolExpr
+BoolExpr -> BoolListExpr [ IntExpr ]
+BoolExpr -> BoolFunctionCall
+
+BoolLiteral -> True
+BoolLiteral -> False
+
+Comparison -> IntExpr CompareOp IntExpr
+
+StringComparison -> StringExpr StringCompareOp StringExpr
+
+CompareOp -> <
+CompareOp -> >
+CompareOp -> ==
+CompareOp -> !=
+CompareOp -> <=
+CompareOp -> >=
+
+StringCompareOp -> ==
+StringCompareOp -> !=
+
+BoolOp -> and
+BoolOp -> or
+
+StringExpr -> String
+StringExpr -> StringName
+StringExpr -> ( StringExpr )
+StringExpr -> StringExpr + StringExpr
+StringExpr -> StringListExpr [ IntExpr ]
+StringExpr -> StringFunctionCall
+
+ListExpr -> IntListExpr
+ListExpr -> BoolListExpr
+ListExpr -> StringListExpr
+
+IntListExpr -> [ IntItemsOpt ]
+IntListExpr -> IntListName
+IntListExpr -> IntListFunctionCall
+
+BoolListExpr -> [ BoolItemsOpt ]
+BoolListExpr -> BoolListName
+BoolListExpr -> BoolListFunctionCall
+
+StringListExpr -> [ StringItemsOpt ]
+StringListExpr -> StringListName
+StringListExpr -> StringListFunctionCall
+
+IntItemsOpt -> empty
+IntItemsOpt -> IntItems
+
+BoolItemsOpt -> empty
+BoolItemsOpt -> BoolItems
+
+StringItemsOpt -> empty
+StringItemsOpt -> StringItems
+
+IntItems -> IntExpr
+IntItems -> IntExpr , IntItems
+
+BoolItems -> BoolExpr
+BoolItems -> BoolExpr , BoolItems
+
+StringItems -> StringExpr
+StringItems -> StringExpr , StringItems
+
+IntName -> Name
+BoolName -> Name
+StringName -> Name
+IntListName -> Name
+BoolListName -> Name
+StringListName -> Name
+
+IntFunctionCall -> FunctionCall
+BoolFunctionCall -> FunctionCall
+StringFunctionCall -> FunctionCall
+IntListFunctionCall -> FunctionCall
+BoolListFunctionCall -> FunctionCall
+StringListFunctionCall -> FunctionCall
+
+Name -> identifier
+Int -> integer_literal
+String -> string_literal
