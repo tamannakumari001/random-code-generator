@@ -1,25 +1,37 @@
-if True:
-    c = (58 * 74)
+c = 0
+while (c < 3):
+    print(False)
+    print(False)
+    c = (c + 1)
+if False:
+    b = 0
+    while (b < 1):
+        print(((96 * b) > c))
+        b = (b + 1)
+    print((not True))
 else:
-    b = (((61 + 81) - (33 + 81)) * (15 + 16))
-while False:
-    if (((not True) and True) or ((13 < 29) or (False and False))):
-        y = True
-        a = (((52 + 80) != (5 - 6)) or (10 <= (44 + 67)))
-        z = (30 < 55)
+    if ((63 != 98) or ((not False) and (True or False))):
+        print((c - (c * c)))
+        print(((c + 66) >= ((c + 64) + (52 + c))))
     else:
-        a = (((30 - 83) * 19) * (54 - 43))
-        print(a)
-print((((63 * 39) + 25) - 45))
-print(59)
-a = (30 + 12)
-b = (not ((a > 31) and False))
-x = False
-while False:
-    if False:
-        print(a)
-        print(a)
-    else:
-        x = a
-        b = a
-    b = True
+        print(True)
+        print(c)
+        a = (not (43 == c))
+c = 67
+y = False
+a = 0
+while (a < 1):
+    x = (not (37 < (c * 26)))
+    b = (a > 44)
+    a = (a + 1)
+b = (not False)
+if (True or (not (not False))):
+    print(a)
+    print(43)
+    print((not (not False)))
+else:
+    b = c
+z = 0
+while (z < 3):
+    print((63 == 69))
+    z = (z + 1)

@@ -2,6 +2,66 @@
 
 A small project that touches on automata theory, formal languages, and compiler front-end concepts. If you're new to any of the underlying theory, the links below should get you up to speed before diving into the code.
 
+## How to Run Each Phase
+
+Requirements: Python 3 and a C++17 compiler such as `g++`.
+
+Run all commands from the project root.
+
+### Phase 0: Grammar Examples
+
+```bash
+python3 phase_0/balanced_parentheses.py --seed 1 --count 5 --max-depth 6
+python3 phase_0/arithmetic.py --seed 1 --count 5 --depth 3
+```
+
+This phase shows simple random generation for balanced parentheses and arithmetic expressions.
+
+### Phase 1: Simple Statements and AST
+
+```bash
+python3 phase_1/simple.py
+g++ -std=c++17 -Wall -Wextra -pedantic phase_1/ast.cpp -o /tmp/phase1_ast
+/tmp/phase1_ast
+```
+
+This phase generates simple assignments and print statements, then introduces an AST-based C++ generator. To check Phase 1 progress, run:
+
+```bash
+python3 phase_1/test_simple.py
+```
+
+### Phase 2: Symbol Table
+
+```bash
+g++ -std=c++17 -Wall -Wextra -pedantic phase_2/symbol_table.cpp -o /tmp/phase2_symbol_table
+/tmp/phase2_symbol_table
+```
+
+This phase tracks declared variables so generated code can use names more safely.
+
+### Phase 3: Loops and Conditionals
+
+```bash
+./phase_3/run_generator.sh 73 --statements 10 --expr-depth 3 --control-depth 2
+python3 -m py_compile phase_3/code.py
+```
+
+This phase generates code with assignments, prints, boolean expressions, comparisons, `if`, and `while`.
+
+### Phase 4: Functions, Calls, and Lists
+
+```bash
+./phase_4/run_generator.sh 73 --functions 5 --statements 8 --expr-depth 3 --control-depth 2
+python3 -m py_compile phase_4/code.py
+```
+
+This phase adds function definitions, function calls, return statements, strings, lists, and typed values. To run generated code, use a timeout because random programs can contain long or endless loops:
+
+```bash
+timeout 5 python3 phase_4/code.py
+```
+
 ## Learning Resources
 
 ### 1. DFA & Regular Languages (start here)

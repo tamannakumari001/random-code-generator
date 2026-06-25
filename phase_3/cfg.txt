@@ -18,6 +18,7 @@ AssignStmt-> Name = Expr
 AssignStmt-> Name = BoolExpr
 
 PrintStmt -> print ( Expr )
+PrintStmt -> print ( BoolExpr )
 
 IfStmt -> if BoolExpr : Block else : Block
 

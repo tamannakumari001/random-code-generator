@@ -300,6 +300,20 @@ struct PrintInt : Stmt {
     }
 };
 
+struct PrintBool : Stmt {
+    BoolExprPtr value;
+
+    PrintBool(BoolExprPtr value) : value(move(value)) {}
+
+    string to_python(int indent_level) const override {
+        return indentation(indent_level) + "print(" + value->to_python() + ")\n";
+    }
+
+    string repr() const override {
+        return "PrintBool(" + value->repr() + ")";
+    }
+};
+
 struct IfStmt : Stmt {
     BoolExprPtr condition;
     Block then_block;
@@ -357,6 +371,18 @@ struct Program {
 
 string random_variable_name(mt19937& rng, const Environment& env) {
     return random_choice(rng, env.names);
+}
+
+string random_variable_name_except(mt19937& rng, const Environment& env, const string& excluded) {
+    vector<string> candidates;
+
+    for (const string& name : env.names) {
+        if (name != excluded) {
+            candidates.push_back(name);
+        }
+    }
+
+    return random_choice(rng, candidates);
 }
 
 string random_declared_name(mt19937& rng, const Environment& env, ValueType type) {
@@ -441,7 +467,7 @@ BoolExprPtr generate_bool_expression(mt19937& rng, const Environment& env, int d
 Block generate_block(mt19937& rng, Environment env, int statement_count, int expression_depth, int control_depth);
 
 StmtPtr generate_statement(mt19937& rng, Environment& env, int expression_depth, int control_depth) {
-    int max_choice = control_depth > 0 ? 4 : 2;
+    int max_choice = control_depth > 0 ? 4 : 3;
     int choice = random_int(rng, 0, max_choice);
 
     if (choice == 0) {
@@ -463,6 +489,10 @@ StmtPtr generate_statement(mt19937& rng, Environment& env, int expression_depth,
     }
 
     if (choice == 3) {
+        return make_unique<PrintBool>(generate_bool_expression(rng, env, expression_depth));
+    }
+
+    if (choice == 4) {
         Environment then_env = env;
         Environment else_env = env;
         Block then_block = generate_block(rng, then_env, random_int(rng, 1, 3), expression_depth, control_depth - 1);
@@ -475,19 +505,95 @@ StmtPtr generate_statement(mt19937& rng, Environment& env, int expression_depth,
         );
     }
 
-    Environment body_env = env;
-    Block body = generate_block(rng, body_env, random_int(rng, 1, 3), expression_depth, control_depth - 1);
+    throw runtime_error("unreachable statement choice");
+}
 
-    return make_unique<WhileStmt>(
-        make_unique<BoolLiteral>(false),
+StmtPtr generate_assignment_away_from(
+    mt19937& rng,
+    Environment& env,
+    const string& excluded_name,
+    int expression_depth
+) {
+    string name = random_variable_name_except(rng, env, excluded_name);
+
+    if (random_int(rng, 0, 1) == 0) {
+        IntExprPtr value = generate_int_expression(rng, env, expression_depth);
+        env.declare_or_update(name, ValueType::Int);
+        return make_unique<AssignInt>(name, move(value));
+    }
+
+    BoolExprPtr value = generate_bool_expression(rng, env, expression_depth);
+    env.declare_or_update(name, ValueType::Bool);
+    return make_unique<AssignBool>(name, move(value));
+}
+
+Block generate_loop_body(
+    mt19937& rng,
+    Environment env,
+    const string& counter_name,
+    int expression_depth
+) {
+    Block body;
+    int statement_count = random_int(rng, 1, 3);
+
+    for (int i = 0; i < statement_count; i++) {
+        int choice = random_int(rng, 0, 3);
+
+        if (choice == 0) {
+            body.add_statement(make_unique<PrintInt>(generate_int_expression(rng, env, expression_depth)));
+        } else if (choice == 1) {
+            body.add_statement(make_unique<PrintBool>(generate_bool_expression(rng, env, expression_depth)));
+        } else {
+            body.add_statement(generate_assignment_away_from(rng, env, counter_name, expression_depth));
+        }
+    }
+
+    body.add_statement(make_unique<AssignInt>(
+        counter_name,
+        make_unique<ArithBinaryOp>(
+            make_unique<IntVariable>(counter_name),
+            "+",
+            make_unique<IntLiteral>(1)
+        )
+    ));
+
+    return body;
+}
+
+void add_bounded_while(
+    mt19937& rng,
+    Block& block,
+    Environment& env,
+    int expression_depth
+) {
+    string counter_name = random_variable_name(rng, env);
+    int loop_limit = random_int(rng, 1, 4);
+
+    block.add_statement(make_unique<AssignInt>(counter_name, make_unique<IntLiteral>(0)));
+    env.declare_or_update(counter_name, ValueType::Int);
+
+    Environment body_env = env;
+    Block body = generate_loop_body(rng, body_env, counter_name, expression_depth);
+
+    block.add_statement(make_unique<WhileStmt>(
+        make_unique<Comparison>(
+            make_unique<IntVariable>(counter_name),
+            "<",
+            make_unique<IntLiteral>(loop_limit)
+        ),
         move(body)
-    );
+    ));
 }
 
 Block generate_block(mt19937& rng, Environment env, int statement_count, int expression_depth, int control_depth) {
     Block block;
 
     for (int i = 0; i < statement_count; i++) {
+        if (control_depth > 0 && random_int(rng, 0, 5) == 0) {
+            add_bounded_while(rng, block, env, expression_depth);
+            continue;
+        }
+
         block.add_statement(generate_statement(rng, env, expression_depth, control_depth));
     }
 
@@ -820,6 +926,13 @@ private:
 
     StmtPtr parse_print_statement() {
         expect(TokenType::LParen, "expected '(' after print");
+
+        if (next_value_is_bool()) {
+            BoolExprPtr value = parse_bool_expression();
+            expect(TokenType::RParen, "expected ')' after print argument");
+            return make_unique<PrintBool>(move(value));
+        }
+
         IntExprPtr value = parse_int_expression();
         expect(TokenType::RParen, "expected ')' after print argument");
         return make_unique<PrintInt>(move(value));
